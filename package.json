@@ -1,0 +1,14 @@
+{
+  "scripts": {
+    "build": "node scripts/Build.js",
+    "dev": "node scripts/Dev.js && node scripts/Start.js dev",
+    "start": "node scripts/Start.js",
+    "clean": "node scripts/Clean.js"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
