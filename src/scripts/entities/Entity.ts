@@ -3,24 +3,21 @@
  * An entity is a game object that can be rendered on the screen.
  * It can have children entities that are rendered relative to the parent entity.
  * All entities are positioned absolutely on the screen but once rendered, move relative to the parent entity.
- * An entity displays an image and has a name.
  */
 class Entity {
-  private id: number;
-  private htmlDiv: HTMLDivElement;
-  private parent: Entity | null;
-  private children: Map<number, Entity>;
+  protected id: number;
+  protected name: string | null = null;
+  protected htmlDiv: HTMLDivElement;
+  protected parent: Entity | null;
+  protected children: Map<number, Entity>;
 
   /**
-   * @param imgSrc Image source as URL or base64 syntax
-   * @param name Name of the entity (optional)
    * @param x Initial x position (default 0)
    * @param y Initial y position (default 0)
    * @param width Initial width (default 50)
    * @param height Initial height (default 50)
    */
   constructor(
-    imgSrc: string,
     name?: string,
     x?: number,
     y?: number,
@@ -29,19 +26,18 @@ class Entity {
   ) {
     this.htmlDiv = document.createElement("div");
     this.htmlDiv.style.position = "absolute";
-    this.htmlDiv.style.left = (x || 0) + "px";
-    this.htmlDiv.style.top = (y || 0) + "px";
-    this.htmlDiv.style.width = (width || 50) + "px";
-    this.htmlDiv.style.height = (height || 50) + "px";
 
-    const img = document.createElement("img");
+    if (typeof x === "number") this.htmlDiv.style.left = x + "px";
+    if (typeof y === "number") this.htmlDiv.style.top = y + "px";
+    if (typeof width === "number") this.htmlDiv.style.width = width + "px";
+    if (typeof height === "number") this.htmlDiv.style.height = height + "px";
 
-    img.src = imgSrc;
-    img.alt = name || "";
-    img.style.width = "100%";
-    img.style.height = "100%";
+    this.htmlDiv.style.backgroundColor = "transparent";
+    this.htmlDiv.style.margin = "0";
+    this.htmlDiv.style.padding = "0";
 
     this.id = NaN;
+    this.name = name || null;
     this.parent = null;
     this.children = new Map<number, Entity>();
   }
@@ -62,14 +58,6 @@ class Entity {
 
   get height() {
     return this.htmlDiv.offsetHeight;
-  }
-
-  get name() {
-    return this.htmlDiv.querySelector("img")?.alt || "";
-  }
-
-  get imgSrc() {
-    return this.htmlDiv.querySelector("img")?.src || "";
   }
 
   get zIndex() {
@@ -93,16 +81,8 @@ class Entity {
     this.htmlDiv.style.height = value + "px";
   }
 
-  set name(value: string) {
-    this.htmlDiv.querySelector("img")!.alt = value;
-  }
-
-  set imgSrc(value: string) {
-    this.htmlDiv.querySelector("img")!.src = value;
-  }
-
   set zIndex(value: number) {
-    this.htmlDiv.style.zIndex = '' + value;
+    this.htmlDiv.style.zIndex = "" + value;
   }
 
   // methods
@@ -209,3 +189,5 @@ class Entity {
     this.parent.removeChild(this.id);
   }
 }
+
+export default Entity;

@@ -1,19 +1,12 @@
+import SolidEntity from "./entities/SolidEntity";
+
 const Canvas =
   document.getElementById("canvas") || document.createElement("div");
 
 Canvas.style.width = "700px";
 Canvas.style.height = "600px";
 
-const div = document.createElement("div");
-div.style.width = "100px";
-div.style.height = "100px";
-div.style.backgroundColor = "red";
-div.style.position = "absolute";
-div.style.top = "0px";
-div.style.left = "0px";
-div.style.borderRadius = "50%";
-
-Canvas.appendChild(div);
+const entity = new SolidEntity("red", 100, "entity", 0, 0, 50, 50);
 
 window.addEventListener(
   "keydown",
@@ -23,30 +16,34 @@ window.addEventListener(
     // within the bounds of the canvas
     const canvasWidth = Canvas.clientWidth;
     const canvasHeight = Canvas.clientHeight;
-    const { left, top } = div.getBoundingClientRect();
+    const { left, top, width, height } = {
+      left: entity.x,
+      top: entity.y,
+      width: entity.width,
+      height: entity.height,
+    };
+
     // up arrow
     if (event.key === "ArrowUp") {
-      if (top > 0) div.style.top = parseInt(div.style.top) - 10 + "px";
+      if (top > 0) entity.moveBy(0, -10);
     }
     // down arrow
     if (event.key === "ArrowDown") {
-      if (top < canvasHeight)
-        div.style.top = parseInt(div.style.top) + 10 + "px";
+      if (top < canvasHeight) entity.moveBy(0, 10);
     }
     // left arrow
     if (event.key === "ArrowLeft") {
-      if (left > 0) div.style.left = parseInt(div.style.left) - 10 + "px";
+      if (left > 0) entity.moveBy(-10, 0);
     }
     // right arrow
     if (event.key === "ArrowRight") {
-      if (left < canvasWidth)
-        div.style.left = parseInt(div.style.left) + 10 + "px";
+      if (left < canvasWidth) entity.moveBy(10, 0);
     }
 
     // spacebar
     if (event.key === " ") {
-      const currentColor = div.style.backgroundColor;
-      div.style.backgroundColor = currentColor === "red" ? "blue" : "red";
+      const currentColor = entity.color;
+      entity.color = currentColor === "red" ? "blue" : "red";
     }
   },
   true
