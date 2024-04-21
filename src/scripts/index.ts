@@ -1,4 +1,4 @@
-import SolidEntity from "./entities/SolidEntity";
+import SolidEntity from "./entities/SolidEntity.js";
 
 const Canvas =
   document.getElementById("canvas") || document.createElement("div");
