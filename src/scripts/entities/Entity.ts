@@ -53,11 +53,11 @@ class Entity {
   }
 
   get width() {
-    return this.htmlDiv.offsetWidth;
+    return this.htmlDiv.scrollWidth;
   }
 
   get height() {
-    return this.htmlDiv.offsetHeight;
+    return this.htmlDiv.scrollHeight;
   }
 
   get zIndex() {
