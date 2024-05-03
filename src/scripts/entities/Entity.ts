@@ -27,6 +27,8 @@ class Entity {
     this.htmlDiv = document.createElement("div");
     this.htmlDiv.style.position = "absolute";
 
+    if (name) this.htmlDiv.id = name;
+
     if (typeof x === "number") this.htmlDiv.style.left = x + "px";
     if (typeof y === "number") this.htmlDiv.style.top = y + "px";
     if (typeof width === "number") this.htmlDiv.style.width = width + "px";
