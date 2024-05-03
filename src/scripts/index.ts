@@ -33,6 +33,18 @@ const spawnInterval = setInterval(() => {
 const moveInterval = setInterval(() => {
   // move all the ghosts
   Ghosts.forEach((ghost) => ghost.move());
+
+  // check protagonist collision with ghosts
+  Ghosts.forEach((ghost) => {
+    if (protagonist.isCollidingWithGhost(ghost)) {
+      console.log("Game Over!");
+      clearInterval(spawnInterval);
+      clearInterval(moveInterval);
+      protagonist.entity.remove();
+      Ghosts.forEach((ghost) => ghost.entity.remove());
+      alert("W A S T E D !!!");
+    }
+  });
 }, 100);
 
 window.addEventListener("keydown", function (event) {
@@ -66,16 +78,4 @@ window.addEventListener("keydown", function (event) {
   if (event.key === "Home") {
     protagonist.entity.moveTo(protagonist.initX, protagonist.initY);
   }
-
-  // check protagonist collision with ghosts
-  Ghosts.forEach((ghost) => {
-    if (protagonist.isCollidingWithGhost(ghost)) {
-      console.log("Game Over!");
-      clearInterval(spawnInterval);
-      clearInterval(moveInterval);
-      protagonist.entity.remove();
-      Ghosts.forEach((ghost) => ghost.entity.remove());
-      alert("W A S T E D !!!");
-    }
-  });
 });
