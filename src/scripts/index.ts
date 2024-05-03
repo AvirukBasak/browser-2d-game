@@ -2,75 +2,62 @@ import SolidEntity from "./entities/SolidEntity.js";
 
 const Canvas = document.getElementById("canvas") || document.body;
 
-Canvas.style.width = "100vw";
-Canvas.style.height = "100vh";
-
 // within the bounds of the canvas
-const canvasWidth = Canvas.scrollWidth;
-const canvasHeight = Canvas.scrollHeight;
+const CANVAS_WIDTH = Canvas.scrollWidth;
+const CANVAS_HEIGHT = Canvas.scrollHeight;
 
-const entityWidth = 100;
-const entityHeight = 100;
+const BALL_WIDTH = 50;
+const BALL_HEIGHT = 50;
 
-const entityInitialX = canvasWidth / 2 - entityWidth / 2;
-const entityInitialY = canvasHeight / 2 - entityHeight / 2;
+const BALL_XINIT = CANVAS_WIDTH / 2 - BALL_WIDTH / 2;
+const BALL_YINIT = CANVAS_HEIGHT / 2 - BALL_HEIGHT / 2;
 
 const entity = new SolidEntity(
   "red",
   100,
   "circle1",
-  entityInitialX,
-  entityInitialY,
-  entityWidth,
-  entityHeight
+  BALL_XINIT,
+  BALL_YINIT,
+  BALL_WIDTH,
+  BALL_HEIGHT
 );
 entity.render();
 
-window.addEventListener(
-  "keydown",
-  function (event) {
-    const { x, y, left, top, width, height } = {
-      x: entity.x,
-      y: entity.y,
-      left: entity.x,
-      top: entity.y,
-      width: entity.width,
-      height: entity.height,
-    };
+window.addEventListener("keydown", function (event) {
+  if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(event.key)) {
+    console.log(
+      `x: ${entity.x}, y: ${entity.y}, width: ${entity.width}, height: ${entity.height}`
+    );
+  }
 
-    if (
-      ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(event.key)
-    ) {
-      console.log(`x: ${x}, y: ${y}, width: ${width}, height: ${height}`);
-    }
+  const { topBoundPosn, bottomBoundPosn, leftBoundPosn, rightBoundPosn } =
+    entity;
 
-    // up arrow
-    if (event.key === "ArrowUp") {
-      if (top > 0) entity.moveBy(0, -10);
-    }
-    // down arrow
-    if (event.key === "ArrowDown") {
-      if (top < canvasHeight) entity.moveBy(0, 10);
-    }
-    // left arrow
-    if (event.key === "ArrowLeft") {
-      if (left > 0) entity.moveBy(-10, 0);
-    }
-    // right arrow
-    if (event.key === "ArrowRight") {
-      if (left < canvasWidth) entity.moveBy(10, 0);
-    }
+  // up arrow
+  if (event.key === "ArrowUp") {
+    if (topBoundPosn > 0) entity.moveBy(0, -10);
+  }
+  // down arrow
+  if (event.key === "ArrowDown") {
+    if (bottomBoundPosn < CANVAS_HEIGHT) entity.moveBy(0, 10);
+  }
+  // left arrow
+  if (event.key === "ArrowLeft") {
+    if (leftBoundPosn > 0) entity.moveBy(-10, 0);
+  }
+  // right arrow
+  if (event.key === "ArrowRight") {
+    if (rightBoundPosn < CANVAS_WIDTH) entity.moveBy(10, 0);
+  }
 
-    // home
-    if (event.key === "Home") {
-      entity.moveTo(entityInitialX, entityInitialY);
-    }
+  // home
+  if (event.key === "Home") {
+    entity.moveTo(BALL_XINIT, BALL_YINIT);
+  }
 
-    // spacebar
-    if (event.key === " ") {
-      const currentColor = entity.color;
-      entity.color = currentColor === "red" ? "blue" : "red";
-    }
-  },
-  true
-);
+  // spacebar
+  if (event.key === " ") {
+    const currentColor = entity.color;
+    entity.color = currentColor === "red" ? "blue" : "red";
+  }
+});

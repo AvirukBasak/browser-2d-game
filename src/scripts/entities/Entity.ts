@@ -64,6 +64,22 @@ class Entity {
     return Number(this.htmlDiv.style.zIndex);
   }
 
+  get topBoundPosn() {
+    return this.y;
+  }
+
+  get bottomBoundPosn() {
+    return this.y + this.height;
+  }
+
+  get leftBoundPosn() {
+    return this.x;
+  }
+
+  get rightBoundPosn() {
+    return this.x + this.width;
+  }
+
   // setters
   set x(value: number) {
     this.htmlDiv.style.left = value + "px";
