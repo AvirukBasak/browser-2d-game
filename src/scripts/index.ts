@@ -75,6 +75,7 @@ window.addEventListener("keydown", function (event) {
       clearInterval(moveInterval);
       protagonist.entity.remove();
       Ghosts.forEach((ghost) => ghost.entity.remove());
+      alert("W A S T E D !!!");
     }
   });
 });
