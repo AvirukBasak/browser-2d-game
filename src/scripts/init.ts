@@ -46,12 +46,28 @@ export class Protagonist {
   moveRight() {
     this.entity.moveBy(this.moveBy, 0);
   }
+
+  isCollidingWithGhost(ghost: Ghost): boolean {
+    if (
+      this.entity.leftBoundPosn < ghost.entity.rightBoundPosn &&
+      this.entity.rightBoundPosn > ghost.entity.leftBoundPosn &&
+      this.entity.topBoundPosn < ghost.entity.bottomBoundPosn &&
+      this.entity.bottomBoundPosn > ghost.entity.topBoundPosn
+    ) {
+      return true;
+    }
+    return false;
+  }
 }
 
 export class Ghost {
   initX: number;
   initY: number;
   moveBy: number;
+
+  dirX: number;
+  dirY: number;
+
   entity: SolidEntity;
 
   constructor() {
@@ -60,6 +76,8 @@ export class Ghost {
     this.initX = Math.random() * CANVAS_WIDTH - 16;
     this.initY = Math.random() * CANVAS_HEIGHT - 16;
     this.moveBy = 7;
+    this.dirX = 1;
+    this.dirY = 1;
 
     // chhose random color i.e. not green
     let randomColor = getRandomColor();
@@ -79,9 +97,14 @@ export class Ghost {
     this.entity.render();
   }
 
+  changeDirection() {
+    this.dirX = [0, 1, -1][Math.floor(Math.random() * 3)];
+    this.dirY = [0, 1, -1][Math.floor(Math.random() * 3)];
+  }
+
   move() {
-    const dx = this.moveBy * [0, 1, -1][Math.floor(Math.random() * 3)];
-    const dy = this.moveBy * [0, 1, -1][Math.floor(Math.random() * 3)];
+    const dx = this.moveBy * this.dirX;
+    const dy = this.moveBy * this.dirY;
     if (this.entity.topBoundPosn + dy > 0 && this.entity.bottomBoundPosn + dy < CANVAS_HEIGHT) {
       this.entity.moveBy(0, dy);
     }

@@ -8,7 +8,7 @@ const MIN_GHOSTS = 50;
 const MAX_GHOSTS = 250;
 
 // adds ghosts to the canvas every 2 seconds
-setInterval(() => {
+const spawnInterval = setInterval(() => {
   // create a new ghost if there are less than the max number of ghosts
   if (Ghosts.length < MAX_GHOSTS) {
     const newGhost = new Ghost();
@@ -25,9 +25,12 @@ setInterval(() => {
     ghostToRemove.entity.remove();
     Ghosts.splice(randomIndex, 1);
   }
+
+  // change ghost directions
+  Ghosts.forEach((ghost) => ghost.changeDirection());
 }, 2000);
 
-setInterval(() => {
+const moveInterval = setInterval(() => {
   // move all the ghosts
   Ghosts.forEach((ghost) => ghost.move());
 }, 100);
@@ -64,9 +67,14 @@ window.addEventListener("keydown", function (event) {
     protagonist.entity.moveTo(protagonist.initX, protagonist.initY);
   }
 
-  //   // spacebar
-  //   if (event.key === " ") {
-  //     const currentColor = protagonist.entity.color;
-  //     protagonist.entity.color = currentColor === "red" ? "blue" : "red";
-  //   }
+  // check protagonist collision with ghosts
+  Ghosts.forEach((ghost) => {
+    if (protagonist.isCollidingWithGhost(ghost)) {
+      console.log("Game Over!");
+      clearInterval(spawnInterval);
+      clearInterval(moveInterval);
+      protagonist.entity.remove();
+      Ghosts.forEach((ghost) => ghost.entity.remove());
+    }
+  });
 });
