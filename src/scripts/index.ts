@@ -1,63 +1,72 @@
-import SolidEntity from "./entities/SolidEntity.js";
+import { CANVAS_WIDTH, CANVAS_HEIGHT, Ghost, Protagonist } from "./init.js";
 
-const Canvas = document.getElementById("canvas") || document.body;
+// the protagonist needs to avoid colliding with the ghosts
+const protagonist = new Protagonist();
 
-// within the bounds of the canvas
-const CANVAS_WIDTH = Canvas.scrollWidth;
-const CANVAS_HEIGHT = Canvas.scrollHeight;
+const Ghosts: Ghost[] = [];
+const MIN_GHOSTS = 50;
+const MAX_GHOSTS = 250;
 
-const BALL_WIDTH = 50;
-const BALL_HEIGHT = 50;
+// adds ghosts to the canvas every 2 seconds
+setInterval(() => {
+  // create a new ghost if there are less than the max number of ghosts
+  if (Ghosts.length < MAX_GHOSTS) {
+    const newGhost = new Ghost();
+    Ghosts.push(newGhost);
+  }
 
-const BALL_XINIT = CANVAS_WIDTH / 2 - BALL_WIDTH / 2;
-const BALL_YINIT = CANVAS_HEIGHT / 2 - BALL_HEIGHT / 2;
+  // decide whether to remove a random ghost
+  const removeRandomGhost = [true, false][Math.floor(Math.random() * 2)];
 
-const entity = new SolidEntity(
-  "red",
-  100,
-  "circle1",
-  BALL_XINIT,
-  BALL_YINIT,
-  BALL_WIDTH,
-  BALL_HEIGHT
-);
-entity.render();
+  // remove a random ghost as well only if minimum number of ghosts is exceeded
+  if (removeRandomGhost && Ghosts.length > MIN_GHOSTS) {
+    const randomIndex = Math.floor(Math.random() * Ghosts.length);
+    const ghostToRemove = Ghosts[randomIndex];
+    ghostToRemove.entity.remove();
+    Ghosts.splice(randomIndex, 1);
+  }
+}, 2000);
+
+setInterval(() => {
+  // move all the ghosts
+  Ghosts.forEach((ghost) => ghost.move());
+}, 100);
 
 window.addEventListener("keydown", function (event) {
   if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(event.key)) {
     console.log(
-      `x: ${entity.x}, y: ${entity.y}, width: ${entity.width}, height: ${entity.height}`
+      `x: ${protagonist.entity.x}, y: ${protagonist.entity.y}, width: ${protagonist.entity.width}, height: ${protagonist.entity.height}`
     );
   }
 
   const { topBoundPosn, bottomBoundPosn, leftBoundPosn, rightBoundPosn } =
-    entity;
+    protagonist.entity;
 
   // up arrow
   if (event.key === "ArrowUp") {
-    if (topBoundPosn > 0) entity.moveBy(0, -10);
+    if (topBoundPosn > 0) protagonist.moveUp();
   }
   // down arrow
   if (event.key === "ArrowDown") {
-    if (bottomBoundPosn < CANVAS_HEIGHT) entity.moveBy(0, 10);
+    if (bottomBoundPosn < CANVAS_HEIGHT) protagonist.moveDown();
   }
   // left arrow
   if (event.key === "ArrowLeft") {
-    if (leftBoundPosn > 0) entity.moveBy(-10, 0);
+    if (leftBoundPosn > 0) protagonist.moveLeft();
   }
   // right arrow
   if (event.key === "ArrowRight") {
-    if (rightBoundPosn < CANVAS_WIDTH) entity.moveBy(10, 0);
+    if (rightBoundPosn < CANVAS_WIDTH) protagonist.moveRight();
   }
 
   // home
   if (event.key === "Home") {
-    entity.moveTo(BALL_XINIT, BALL_YINIT);
+    protagonist.entity.moveTo(protagonist.initX, protagonist.initY);
   }
 
-  // spacebar
-  if (event.key === " ") {
-    const currentColor = entity.color;
-    entity.color = currentColor === "red" ? "blue" : "red";
-  }
+  //   // spacebar
+  //   if (event.key === " ") {
+  //     const currentColor = protagonist.entity.color;
+  //     protagonist.entity.color = currentColor === "red" ? "blue" : "red";
+  //   }
 });
